@@ -1,4 +1,4 @@
-package com.example.catapp;
+package com.example.catapp.Database;
 
 import java.io.Serializable;
 import com.google.gson.annotations.Expose;

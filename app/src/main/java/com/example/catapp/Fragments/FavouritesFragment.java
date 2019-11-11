@@ -1,6 +1,8 @@
-package com.example.catapp;
+package com.example.catapp.Fragments;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -19,6 +21,10 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.catapp.Database.Cat;
+import com.example.catapp.CatAdapter;
+import com.example.catapp.MainActivity;
+import com.example.catapp.R;
 import com.google.gson.Gson;
 
 import java.util.Arrays;
@@ -44,6 +50,9 @@ public class FavouritesFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_favourites, container, false);
 
         setHasOptionsMenu(true);
+
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+        String username = sharedPreferences.getString(getString(R.string.username), "defaultValue");
 
         recyclerView = view.findViewById(R.id.rv_main);
         LinearLayoutManager layoutManager = new LinearLayoutManager(view.getContext());

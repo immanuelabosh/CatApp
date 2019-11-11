@@ -9,10 +9,11 @@ import androidx.fragment.app.FragmentTransaction;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 
+import com.example.catapp.Fragments.EditTextFragment;
+import com.example.catapp.Fragments.FavouritesFragment;
+import com.example.catapp.Fragments.SearchFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
@@ -24,8 +25,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //set username for favourites
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         SharedPreferences.Editor editor = sharedPreferences.edit();
+        showEditDialog();
         editor.putString(getString(R.string.username), "default");
         editor.apply();
 
@@ -73,5 +76,12 @@ public class MainActivity extends AppCompatActivity {
         fragmentTransaction.replace(R.id.fragment_slot, fragment);
         fragmentTransaction.commit();
     }
+
+    private void showEditDialog() {
+        FragmentManager fm = getSupportFragmentManager();
+        EditTextFragment editTextDialogFragment = EditTextFragment.newInstance("Some Title");
+        editTextDialogFragment.show(fm, "fragment_edit_text");
+    }
+
 }
 

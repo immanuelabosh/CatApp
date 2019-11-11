@@ -1,9 +1,13 @@
-package com.example.catapp;
+package com.example.catapp.Database;
+
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
 
 import java.io.Serializable;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+@Entity
 public class Cat implements Serializable
 {
     @SerializedName("alt_names")
@@ -11,13 +15,14 @@ public class Cat implements Serializable
     public String altNames;
     @SerializedName("experimental")
     @Expose
-    public Integer experimental;
+    public int experimental;
     @SerializedName("hairless")
     @Expose
-    public Integer hairless;
+    public int hairless;
     @SerializedName("hypoallergenic")
     @Expose
-    public Integer hypoallergenic;
+    public int hypoallergenic;
+    @PrimaryKey
     @SerializedName("id")
     @Expose
     public String id;
@@ -29,22 +34,22 @@ public class Cat implements Serializable
     public String name;
     @SerializedName("natural")
     @Expose
-    public Integer natural;
+    public int natural;
     @SerializedName("origin")
     @Expose
     public String origin;
     @SerializedName("rare")
     @Expose
-    public Integer rare;
+    public int rare;
     @SerializedName("rex")
     @Expose
-    public Integer rex;
+    public int rex;
     @SerializedName("short_legs")
     @Expose
-    public Integer shortLegs;
+    public int shortLegs;
     @SerializedName("suppressed_tail")
     @Expose
-    public Integer suppressedTail;
+    public int suppressedTail;
     @SerializedName("temperament")
     @Expose
     public String temperament;

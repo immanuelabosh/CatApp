@@ -11,7 +11,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.io.Serializable;
+import com.example.catapp.Database.Cat;
+
 import java.util.List;
 
 // We need to give a type in angle brackets <> when we extend RecyclerView.Adapter

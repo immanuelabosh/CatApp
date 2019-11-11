@@ -1,4 +1,4 @@
-package com.example.catapp;
+package com.example.catapp.Fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -18,6 +18,10 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.catapp.Database.Cat;
+import com.example.catapp.CatAdapter;
+import com.example.catapp.MainActivity;
+import com.example.catapp.R;
 import com.google.gson.Gson;
 
 import java.util.Arrays;
