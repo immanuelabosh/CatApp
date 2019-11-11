@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">CatApp</string>
+    <string name="key">915ffc8c-7bd1-4ffd-b062-76f66d2c6511</string>
+    <string name="fav">Fav</string>
+    <string name="search">Search</string>
+    <string name="username">username</string>
+</resources>
