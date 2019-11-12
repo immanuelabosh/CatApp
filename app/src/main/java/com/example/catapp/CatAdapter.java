@@ -11,6 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.catapp.Database.AppDatabase;
 import com.example.catapp.Database.Cat;
 
 import java.util.List;
@@ -20,6 +21,13 @@ import java.util.List;
 public class CatAdapter extends RecyclerView.Adapter<CatAdapter.CatViewHolder> {
     // class variable that holds the data that we want to adapt
     private List<Cat> catsToAdapt;
+
+    //get database instance
+    AppDatabase db;
+
+    public CatAdapter(Context context) {
+        db = AppDatabase.getInstance(context);
+    }
 
     public void setData(List<Cat> catsToAdapt) {
         // This is basically a Setter that we use to give data to the adapter
@@ -43,8 +51,14 @@ public class CatAdapter extends RecyclerView.Adapter<CatAdapter.CatViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(@NonNull CatViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final CatViewHolder holder, int position) {
         final Cat catAtPosition = catsToAdapt.get(position);
+
+        //check if cat is in favourites database
+        if ((db.catDao().getCatExists(catAtPosition.getId())) == 1){
+            holder.isBookmarked = true;
+            holder.favouriteImageView.setImageResource(R.drawable.ic_star_black_24dp);
+        }
 
         holder.breedTextView.setText(catAtPosition.getName());
 
@@ -52,12 +66,28 @@ public class CatAdapter extends RecyclerView.Adapter<CatAdapter.CatViewHolder> {
             @Override
             public void onClick(View view) {
                 Context context = view.getContext();
-
                 Intent intent = new Intent(context,CatDetailActivity.class);
                 intent.putExtra("cat", catAtPosition);
                 context.startActivity(intent);
             }
         });
+
+        // We can define onClickListener for bookmark button here because it depends on data
+        // unique to this ViewHolder (i.e. whether this item has already been bookmarked or not)
+        holder.favouriteImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(holder.isBookmarked) {
+                    db.catDao().delete(catAtPosition);
+                    holder.favouriteImageView.setImageResource(R.drawable.ic_star_border_black_24dp);
+                } else {
+                    db.catDao().insert(catAtPosition);
+                    holder.favouriteImageView.setImageResource(R.drawable.ic_star_black_24dp);
+                }
+                holder.isBookmarked = !holder.isBookmarked;
+            }
+        });
+
 // possible share cat function
 /*
         holder.shareImageView.setOnClickListener(new View.OnClickListener() {
@@ -107,21 +137,6 @@ public class CatAdapter extends RecyclerView.Adapter<CatAdapter.CatViewHolder> {
             view = v;
             breedTextView = v.findViewById(R.id.textView);
             favouriteImageView = v.findViewById(R.id.imageView2);
-
-            // We can define onClickListener for bookmark button here because it depends on data
-            // unique to this ViewHolder (i.e. whether this item has already been bookmarked or not)
-            // Technically, we can do everything that we do in onBindViewHolder in here as well.
-            favouriteImageView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if(isBookmarked) {
-                        favouriteImageView.setImageResource(R.drawable.ic_star_border_black_24dp);
-                    } else {
-                        favouriteImageView.setImageResource(R.drawable.ic_star_black_24dp);
-                    }
-                    isBookmarked = !isBookmarked;
-                }
-            });
 
         }
     }

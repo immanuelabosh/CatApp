@@ -1,14 +1,17 @@
 package com.example.catapp.Fragments;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -27,8 +30,9 @@ import com.google.gson.Gson;
 import java.util.Arrays;
 import java.util.List;
 
-public class SearchFragment extends Fragment {
+public class SearchFragment extends Fragment implements EditTextFragment.EditTextFragmentListener {
     private RecyclerView recyclerView;
+    private CatAdapter catAdapter;
 
     public SearchFragment() {
         // Required empty public constructor
@@ -51,10 +55,39 @@ public class SearchFragment extends Fragment {
         recyclerView = view.findViewById(R.id.rv_main);
         LinearLayoutManager layoutManager = new LinearLayoutManager(view.getContext());
         recyclerView.setLayoutManager(layoutManager);
+        catAdapter = new CatAdapter(getContext());
 
-        final CatAdapter catAdapter = new CatAdapter();
+        updateRecyclerView("https://api.thecatapi.com/v1/breeds?api-key="+getString(R.string.key));
+
+        return view;
+    }
+
+    // This is just an example of a way that the Fragment can communicate with the parent Activity.
+    // Specifically, this is using a method belonging to the parent.
+    @Override
+    public void onResume() {
+        super.onResume();
+        MainActivity parent = (MainActivity) getActivity();
+        //parent.showCoolMessage("cool (from ArticleRecyclerFragment onResume)");
+    }
+
+    // Call this method to launch the edit dialog
+    private void showEditDialog() {
+        FragmentManager fm = getFragmentManager();
+        EditTextFragment editTextFragment = EditTextFragment.newInstance("Search Breeds");
+        // SETS the target fragment for use later when sending results
+        editTextFragment.setTargetFragment(SearchFragment.this, 300);
+        editTextFragment.show(fm, "fragment_edit_text");
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        showEditDialog();
+        return true;
+    }
+
+    public void updateRecyclerView(String url){
         final RequestQueue requestQueue =  Volley.newRequestQueue(getActivity());
-        String url = "https://api.thecatapi.com/v1/breeds?api-key="+getString(R.string.key);
 
         Response.Listener<String> responseListener = new Response.Listener<String>() {
             @Override
@@ -80,16 +113,17 @@ public class SearchFragment extends Fragment {
                 errorListener);
         requestQueue.add(stringRequest);
 
-        return view;
     }
 
-    // This is just an example of a way that the Fragment can communicate with the parent Activity.
-    // Specifically, this is using a method belonging to the parent.
+
+    // This is called when the dialog is completed and the results have been passed
     @Override
-    public void onResume() {
-        super.onResume();
-        MainActivity parent = (MainActivity) getActivity();
-        //parent.showCoolMessage("cool (from ArticleRecyclerFragment onResume)");
-    }
-
+    public void onFinishEditDialog(String inputText) {
+        Toast.makeText(this.getContext(),"Searching for breed " + inputText, Toast.LENGTH_SHORT).show();
+        if (inputText.length() == 0) {
+                updateRecyclerView("https://api.thecatapi.com/v1/breeds");
+            }else {
+                updateRecyclerView("https://api.thecatapi.com/v1/breeds" + "/search?q=" + inputText);
+            }
+        }
 }

@@ -9,29 +9,20 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
-import com.example.catapp.Database.Cat;
+import com.example.catapp.Database.AppDatabase;
 import com.example.catapp.CatAdapter;
 import com.example.catapp.MainActivity;
 import com.example.catapp.R;
-import com.google.gson.Gson;
-
-import java.util.Arrays;
-import java.util.List;
 
 public class FavouritesFragment extends Fragment {
     private RecyclerView recyclerView;
+    private CatAdapter catAdapter = new CatAdapter(getContext());
+    AppDatabase db = AppDatabase.getInstance(getContext());
 
     public FavouritesFragment() {
         // Required empty public constructor
@@ -41,7 +32,7 @@ public class FavouritesFragment extends Fragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menu.clear();
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.edit_username_title_bar, menu);
+        inflater.inflate(R.menu.delete_favourites, menu);
     }
 
     @Override
@@ -57,44 +48,23 @@ public class FavouritesFragment extends Fragment {
         recyclerView = view.findViewById(R.id.rv_main);
         LinearLayoutManager layoutManager = new LinearLayoutManager(view.getContext());
         recyclerView.setLayoutManager(layoutManager);
-
-        final CatAdapter catAdapter = new CatAdapter();
-        final RequestQueue requestQueue =  Volley.newRequestQueue(getActivity());
-        String url = "https://api.thecatapi.com/v1/breeds?api-key="+getString(R.string.key);
-
-        Response.Listener<String> responseListener = new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                Gson gson = new Gson();
-                Cat[] objectsArray = gson.fromJson(response, Cat[].class);
-                List<Cat> objectsList = Arrays.asList(objectsArray);
-                catAdapter.setData(objectsList);
-                recyclerView.setAdapter(catAdapter);
-                requestQueue.stop();
-            }
-        };
-
-        Response.ErrorListener errorListener = new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(getContext(),"The request failed: " + error.getMessage(), Toast.LENGTH_SHORT).show();
-                requestQueue.stop();
-            }
-        };
-
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, url, responseListener,
-                errorListener);
-        requestQueue.add(stringRequest);
+        updateRecyclerView();
 
         return view;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
+        AppDatabase db = AppDatabase.getInstance(getContext());
+        db.catDao().delete(db.catDao().getAllCats());
+        updateRecyclerView();
         return true;
     }
 
+    public void updateRecyclerView(){
+        catAdapter.setData(db.catDao().getAllCats());
+        recyclerView.setAdapter(catAdapter);
+    }
 
     // This is just an example of a way that the Fragment can communicate with the parent Activity.
     // Specifically, this is using a method belonging to the parent.

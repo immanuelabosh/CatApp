@@ -25,13 +25,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //set username for favourites
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        showEditDialog();
-        editor.putString(getString(R.string.username), "default");
-        editor.apply();
-
 
         // I want there to be a Fragment in the slot from the start
         swapFragment(new SearchFragment());
@@ -77,11 +70,6 @@ public class MainActivity extends AppCompatActivity {
         fragmentTransaction.commit();
     }
 
-    private void showEditDialog() {
-        FragmentManager fm = getSupportFragmentManager();
-        EditTextFragment editTextDialogFragment = EditTextFragment.newInstance("Some Title");
-        editTextDialogFragment.show(fm, "fragment_edit_text");
-    }
 
 }
 

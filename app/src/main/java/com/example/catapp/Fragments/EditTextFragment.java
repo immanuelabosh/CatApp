@@ -1,18 +1,29 @@
 package com.example.catapp.Fragments;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.EditText;
+
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import com.example.catapp.R;
+import com.example.catapp.SharedPrefs;
 
 public class EditTextFragment extends DialogFragment {
     private EditText mEditText;
+    // Defines the listener interface
+
+    public interface EditTextFragmentListener {
+
+        void onFinishEditDialog(String inputText);
+
+    }
     public EditTextFragment() {
         // Empty constructor is required for EditTextFragment
         // Make sure not to add arguments to the constructor
@@ -39,7 +50,7 @@ public class EditTextFragment extends DialogFragment {
         // Get field from view
         mEditText = (EditText) view.findViewById(R.id.txt_your_name);
         // Fetch arguments from bundle and set title
-        String title = getArguments().getString("title", "Enter Name");
+        String title = getArguments().getString("title", "Enter Breed");
         getDialog().setTitle(title);
         // Show soft keyboard automatically and request focus to field
         mEditText.requestFocus();
@@ -48,8 +59,16 @@ public class EditTextFragment extends DialogFragment {
     }
 
     @Override
-    public void onDestroyView() {
+    public void onDismiss(@NonNull DialogInterface dialog) {
+        sendBackResult();
+        super.onDismiss(dialog);
+    }
 
-        super.onDestroyView();
+    // Call this method to send the data back to the parent fragment
+    public void sendBackResult() {
+        // Notice the use of `getTargetFragment` which will be set when the dialog is displayed
+        EditTextFragmentListener listener = (EditTextFragmentListener) getTargetFragment();
+        listener.onFinishEditDialog(mEditText.getText().toString());
+        dismiss();
     }
 }
