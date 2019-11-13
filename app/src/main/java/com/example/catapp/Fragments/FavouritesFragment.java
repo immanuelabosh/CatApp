@@ -16,13 +16,22 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.catapp.Database.AppDatabase;
 import com.example.catapp.CatAdapter;
+import com.example.catapp.Database.Cat;
 import com.example.catapp.MainActivity;
 import com.example.catapp.R;
+
+import java.util.List;
+
+import static java.lang.Boolean.FALSE;
+import static java.lang.Boolean.TRUE;
 
 public class FavouritesFragment extends Fragment {
     private RecyclerView recyclerView;
     private CatAdapter catAdapter = new CatAdapter(getContext());
     AppDatabase db = AppDatabase.getInstance(getContext());
+    private MenuItem clearFav;
+    private List<Cat> cats;
+
 
     public FavouritesFragment() {
         // Required empty public constructor
@@ -33,6 +42,12 @@ public class FavouritesFragment extends Fragment {
         menu.clear();
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.delete_favourites, menu);
+        clearFav = menu.findItem(R.id.clearFav);
+        if (cats.isEmpty()){
+            clearFav.setVisible(FALSE);
+        }else {
+            clearFav.setVisible(TRUE);
+        }
     }
 
     @Override
@@ -42,8 +57,6 @@ public class FavouritesFragment extends Fragment {
 
         setHasOptionsMenu(true);
 
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
-        String username = sharedPreferences.getString(getString(R.string.username), "defaultValue");
 
         recyclerView = view.findViewById(R.id.rv_main);
         LinearLayoutManager layoutManager = new LinearLayoutManager(view.getContext());
@@ -58,11 +71,13 @@ public class FavouritesFragment extends Fragment {
         AppDatabase db = AppDatabase.getInstance(getContext());
         db.catDao().delete(db.catDao().getAllCats());
         updateRecyclerView();
+        clearFav.setVisible(FALSE);
         return true;
     }
 
     public void updateRecyclerView(){
-        catAdapter.setData(db.catDao().getAllCats());
+        cats = db.catDao().getAllCats();
+        catAdapter.setData(cats);
         recyclerView.setAdapter(catAdapter);
     }
 

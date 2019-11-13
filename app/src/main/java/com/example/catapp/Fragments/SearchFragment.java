@@ -30,9 +30,13 @@ import com.google.gson.Gson;
 import java.util.Arrays;
 import java.util.List;
 
+import static java.lang.Boolean.FALSE;
+import static java.lang.Boolean.TRUE;
+
 public class SearchFragment extends Fragment implements EditTextFragment.EditTextFragmentListener {
     private RecyclerView recyclerView;
     private CatAdapter catAdapter;
+    private MenuItem clearSearch;
 
     public SearchFragment() {
         // Required empty public constructor
@@ -43,6 +47,8 @@ public class SearchFragment extends Fragment implements EditTextFragment.EditTex
         menu.clear();
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.search_title_bar, menu);
+        clearSearch = menu.findItem(R.id.clearSearch);
+        clearSearch.setVisible(FALSE);
     }
 
     @Override
@@ -51,6 +57,7 @@ public class SearchFragment extends Fragment implements EditTextFragment.EditTex
         View view = inflater.inflate(R.layout.fragment_search, container, false);
 
         setHasOptionsMenu(true);
+
 
         recyclerView = view.findViewById(R.id.rv_main);
         LinearLayoutManager layoutManager = new LinearLayoutManager(view.getContext());
@@ -82,7 +89,12 @@ public class SearchFragment extends Fragment implements EditTextFragment.EditTex
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        showEditDialog();
+        if (item == clearSearch && clearSearch.isVisible()){
+            clearSearch.setVisible(FALSE);
+            updateRecyclerView("https://api.thecatapi.com/v1/breeds");
+        }else {
+            showEditDialog();
+        }
         return true;
     }
 
@@ -121,9 +133,11 @@ public class SearchFragment extends Fragment implements EditTextFragment.EditTex
     public void onFinishEditDialog(String inputText) {
         Toast.makeText(this.getContext(),"Searching for breed " + inputText, Toast.LENGTH_SHORT).show();
         if (inputText.length() == 0) {
-                updateRecyclerView("https://api.thecatapi.com/v1/breeds");
-            }else {
-                updateRecyclerView("https://api.thecatapi.com/v1/breeds" + "/search?q=" + inputText);
-            }
+            clearSearch.setVisible(FALSE);
+            updateRecyclerView("https://api.thecatapi.com/v1/breeds");
+        }else {
+            updateRecyclerView("https://api.thecatapi.com/v1/breeds" + "/search?q=" + inputText);
+            clearSearch.setVisible(TRUE);
         }
+    }
 }
