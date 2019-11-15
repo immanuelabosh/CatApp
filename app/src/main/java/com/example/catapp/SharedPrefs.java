@@ -16,7 +16,7 @@ public class SharedPrefs {
         editor.apply();
     }
 
-    public static String getPrefs(String key, String value, Context context) {
+    public static String getPrefs(String key, Context context) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         return sharedPreferences.getString(key, "");
     }

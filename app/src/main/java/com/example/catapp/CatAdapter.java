@@ -54,7 +54,7 @@ public class CatAdapter extends RecyclerView.Adapter<CatAdapter.CatViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final CatViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final CatViewHolder holder, final int position) {
         final Cat catAtPosition = catsToAdapt.get(position);
 
         //check if cat is in favourites database
@@ -93,7 +93,17 @@ public class CatAdapter extends RecyclerView.Adapter<CatAdapter.CatViewHolder> {
                     //delete it and change the image
                     db.catDao().delete(catAtPosition);
                     holder.favouriteImageView.setImageResource(R.drawable.ic_star_border_black_24dp);
-                //if its not bookmarked, put it in the database and change the image
+                    //this code will only work in the favourites fragment, it will throw an exception in the search fragment
+                    try {
+                        //this will remove the unfavourited cat from the recycler view
+                        catsToAdapt.remove(position);
+                        notifyItemRemoved(position);
+                        notifyItemRangeChanged(position, getItemCount());
+                    }catch (UnsupportedOperationException e){
+                        //if its in the search fragment, dont remove it from the recycler view
+                    }
+
+                    //if its not bookmarked, put it in the database and change the image
                 } else {
                     db.catDao().insert(catAtPosition);
                     holder.favouriteImageView.setImageResource(R.drawable.ic_star_black_24dp);
