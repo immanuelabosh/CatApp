@@ -36,7 +36,22 @@ public class CatDetailActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
 
-        Cat cat = (Cat)intent.getSerializableExtra("cat");
+        Cat cat = (Cat) intent.getSerializableExtra("cat");
+
+        cat.getId();
+        cat.getName();
+        cat.getAltNames();
+        cat.getDescription();
+        cat.getTemperament();
+        cat.getOrigin();
+        cat.getLifeSpan();
+        cat.getWikipediaUrl();
+        cat.getDogFriendly();
+
+        //I will get weight when I get the image
+        //cat.getMetric();
+
+
 
 /*
         titleTextView.setText(book.getTitle());

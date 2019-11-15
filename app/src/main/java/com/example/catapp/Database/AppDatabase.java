@@ -20,7 +20,7 @@ import androidx.room.RoomDatabase;
  *  ... etc (whatever methods you defined in your Dao).
  *
  */
-@Database(entities = {Cat.class}, version = 1)  // Replace "Book.class" with whatever your Book entity class is.
+@Database(entities = {Cat.class}, version = 5)  // Replace "Book.class" with whatever your Book entity class is.
 public abstract class AppDatabase extends RoomDatabase {
     public abstract CatDao catDao();          // Replace BookDao with whatever you name your DAO
 
@@ -35,7 +35,9 @@ public abstract class AppDatabase extends RoomDatabase {
                                                 //     line is necessary for the app to work.
                                                 //     This line will basically allow the database
                                                 //     queries to freeze the app.
+                    .fallbackToDestructiveMigration()
                     .build();
+
         }
         return instance;
     }

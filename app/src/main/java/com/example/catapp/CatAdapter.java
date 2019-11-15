@@ -58,6 +58,9 @@ public class CatAdapter extends RecyclerView.Adapter<CatAdapter.CatViewHolder> {
         if ((db.catDao().getCatExists(catAtPosition.getId())) == 1){
             holder.isBookmarked = true;
             holder.favouriteImageView.setImageResource(R.drawable.ic_star_black_24dp);
+        }else {
+            holder.isBookmarked = false;
+            holder.favouriteImageView.setImageResource(R.drawable.ic_star_border_black_24dp);
         }
 
         holder.breedTextView.setText(catAtPosition.getName());
