@@ -37,12 +37,14 @@ public class FavouritesFragment extends Fragment {
         // Required empty public constructor
     }
 
+    //inflate the menu with the delete all button
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menu.clear();
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.delete_favourites, menu);
         clearFav = menu.findItem(R.id.clearFav);
+        //hide the clear all button if there are no favourites
         hideClearAllMenu();
     }
 
@@ -67,6 +69,13 @@ public class FavouritesFragment extends Fragment {
     @Override
     public void onResume() {
         updateRecyclerView();
+        /*
+        this will hide the clear all button if you unfavourite a cat in the detail page then go back
+        to the favourites page
+        I check if it's null because onResume() actually runs before the menu is inflated when the
+        fragment is created so i have to make sure that the menu item isnt null
+        */
+        if (clearFav != null) hideClearAllMenu();
         super.onResume();
     }
 
