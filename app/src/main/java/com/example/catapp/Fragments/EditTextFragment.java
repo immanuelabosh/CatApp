@@ -2,11 +2,13 @@ package com.example.catapp.Fragments;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,14 +17,14 @@ import androidx.fragment.app.DialogFragment;
 import com.example.catapp.R;
 import com.example.catapp.SharedPrefs;
 
+//This is my edit text fragment
+//This is the dialog i use to get your search query
 public class EditTextFragment extends DialogFragment {
     private EditText mEditText;
+
     // Defines the listener interface
-
     public interface EditTextFragmentListener {
-
         void onFinishEditDialog(String inputText);
-
     }
     public EditTextFragment() {
         // Empty constructor is required for EditTextFragment
@@ -58,11 +60,13 @@ public class EditTextFragment extends DialogFragment {
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
     }
 
+    //on dismiss of the fragment, send the data back
     @Override
     public void onDismiss(@NonNull DialogInterface dialog) {
         sendBackResult();
         super.onDismiss(dialog);
     }
+
 
     // Call this method to send the data back to the parent fragment
     public void sendBackResult() {

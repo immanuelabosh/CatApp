@@ -10,6 +10,9 @@ import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 
+//this is my cat class
+//i store this in the database
+//I generated this from the json using http://www.jsonschema2pojo.org/
 @Entity
 public class Cat implements Serializable {
 

@@ -1,4 +1,4 @@
-package com.example.catapp;
+package com.example.catapp.Activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import com.example.catapp.Fragments.EditTextFragment;
 import com.example.catapp.Fragments.FavouritesFragment;
 import com.example.catapp.Fragments.SearchFragment;
+import com.example.catapp.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
@@ -25,10 +26,13 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //set the title of the page on load to Breeds
+        setTitle("Breeds");
 
         // I want there to be a Fragment in the slot from the start
         swapFragment(new SearchFragment());
 
+        //setting up the bottom nav view
         bottomNavigationView = findViewById(R.id.nav_view);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -39,17 +43,11 @@ public class MainActivity extends AppCompatActivity {
                 if (menuItem.getItemId() == R.id.nav_search) {
                     Fragment fragment = new SearchFragment();
                     swapFragment(fragment);
+                    setTitle("Breeds");
                     return true;
                 } else if (menuItem.getItemId() == R.id.nav_favourites) {
                     Fragment fragment = new FavouritesFragment();
-
-                    // Here's just an example of passing information to the Fragment via Bundle
-                    Bundle bundle = new Bundle();
-                    bundle.putString("param1", "First Argument");
-                    bundle.putString("param2", "Second Argument");
-                    fragment.setArguments(bundle);
-                    // End bundle part
-
+                    setTitle("Favourites");
                     swapFragment(fragment);
                     return true;
                 }

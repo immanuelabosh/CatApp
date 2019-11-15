@@ -11,10 +11,13 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.catapp.Activities.CatDetailActivity;
 import com.example.catapp.Database.AppDatabase;
 import com.example.catapp.Database.Cat;
 
 import java.util.List;
+
+//This is my recycler view adapter, i use it for my search and favourites fragment
 
 // We need to give a type in angle brackets <> when we extend RecyclerView.Adapter
 // It's saying that we want an adapter that adapts to CatViewHolder (our custom ViewHolder)
@@ -56,69 +59,52 @@ public class CatAdapter extends RecyclerView.Adapter<CatAdapter.CatViewHolder> {
 
         //check if cat is in favourites database
         if ((db.catDao().getCatExists(catAtPosition.getId())) == 1){
+            //if it is change the star to a filled in one to show that to the user
             holder.isBookmarked = true;
             holder.favouriteImageView.setImageResource(R.drawable.ic_star_black_24dp);
+        //if it isnt, set it to a border star
         }else {
             holder.isBookmarked = false;
             holder.favouriteImageView.setImageResource(R.drawable.ic_star_border_black_24dp);
         }
 
+        //show the cat breeds name
         holder.breedTextView.setText(catAtPosition.getName());
 
+        //when they click on a cat item, open the detail activity
         holder.view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Context context = view.getContext();
-                Intent intent = new Intent(context,CatDetailActivity.class);
+                Intent intent = new Intent(context, CatDetailActivity.class);
                 intent.putExtra("cat", catAtPosition);
                 context.startActivity(intent);
             }
         });
 
+        //toggle functionality for the the favourites feature
         // We can define onClickListener for bookmark button here because it depends on data
         // unique to this ViewHolder (i.e. whether this item has already been bookmarked or not)
         holder.favouriteImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //if its bookmarked
                 if(holder.isBookmarked) {
+                    //delete it and change the image
                     db.catDao().delete(catAtPosition);
                     holder.favouriteImageView.setImageResource(R.drawable.ic_star_border_black_24dp);
+                //if its not bookmarked, put it in the database and change the image
                 } else {
                     db.catDao().insert(catAtPosition);
                     holder.favouriteImageView.setImageResource(R.drawable.ic_star_black_24dp);
                 }
+                //invert the status
                 holder.isBookmarked = !holder.isBookmarked;
             }
         });
 
-// possible share cat function
-/*
-        holder.shareImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Context context = view.getContext();
-                Intent intent = new Intent(Intent.ACTION_SEND);
+        // maybe add a share cat function
 
-                intent.putExtra(Intent.EXTRA_TEXT, catAtPosition.getTitle());
-                intent.setType("text/plain");
-                context.startActivity(intent);
-            }
-        });
-*/
-
-//set imageview
-/*
-        try {
-            //i wrapped this in a try catch bcos the null check wasnt working
-            if (catAtPosition.getReferenceImageId() != null) {
-                String imageUrl = catAtPosition.getMedia()[0].getMedia_metadata()[0].getUrl();
-                Glide.with(holder.view.getContext()).load(imageUrl).into(holder.catImageView);
-            }
-        }catch (ArrayIndexOutOfBoundsException e){
-            //if you cant find an image, use this image of a cloud with a line through it instead
-            holder.articleImageView.setImageResource(R.drawable.ic_cloud_off_black_24dp);
-        }
-*/
     }
 
     @Override

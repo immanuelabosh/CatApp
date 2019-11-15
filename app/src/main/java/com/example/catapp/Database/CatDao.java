@@ -8,7 +8,8 @@ import androidx.room.Query;
 import androidx.room.Update;
 
 import java.util.List;
-
+//this is my CatDao
+//Pretty standard stuff
 @Dao
 public interface CatDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
