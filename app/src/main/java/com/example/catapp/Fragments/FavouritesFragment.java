@@ -15,7 +15,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.catapp.Database.AppDatabase;
 import com.example.catapp.CatAdapter;
 import com.example.catapp.Database.Cat;
-import com.example.catapp.Activities.MainActivity;
 import com.example.catapp.R;
 
 import java.util.List;
@@ -29,8 +28,9 @@ public class FavouritesFragment extends Fragment {
     private RecyclerView recyclerView;
     private CatAdapter catAdapter = new CatAdapter(getContext());
     //get the database
-    AppDatabase db = AppDatabase.getInstance(getContext());
+    private AppDatabase db = AppDatabase.getInstance(getContext());
     private MenuItem clearFav;
+    private List<Cat> cats;
 
 
     public FavouritesFragment() {
@@ -43,6 +43,7 @@ public class FavouritesFragment extends Fragment {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.delete_favourites, menu);
         clearFav = menu.findItem(R.id.clearFav);
+        hideClearAllMenu();
     }
 
     @Override
@@ -76,15 +77,20 @@ public class FavouritesFragment extends Fragment {
         db.catDao().delete(db.catDao().getAllCats());
         //update the recyclerview
         updateRecyclerView();
+        //hide the menu item
+        clearFav.setVisible(FALSE);
         return true;
     }
 
-    //this is a function that fills the recycler view with data and sets it
+    //this is a function that uses data from the database to fill the recycler view and sets it
     public void updateRecyclerView(){
-        List<Cat> cats = db.catDao().getAllCats();
+        cats = db.catDao().getAllCats();
         catAdapter.setData(cats);
         recyclerView.setAdapter(catAdapter);
-        //this just makes the clear all favourites option invisible if there are no favourites to clear
+    }
+
+    //this just makes the clear all favourites option invisible if there are no favourites to clear
+    public void hideClearAllMenu() {
         if (cats.isEmpty()){
             clearFav.setVisible(FALSE);
         }else {
