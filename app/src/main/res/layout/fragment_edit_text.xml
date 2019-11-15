@@ -9,12 +9,15 @@
         android:id="@+id/lbl_your_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:gravity="center"
         android:text="Enter the name of the breed you're looking for here" />
 
     <EditText
         android:id="@+id/txt_your_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="16dp"
         android:imeOptions="actionDone"
         android:inputType="text" />
 
